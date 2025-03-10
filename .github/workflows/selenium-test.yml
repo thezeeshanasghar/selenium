@@ -2,7 +2,7 @@ name: Selenium Tests
 
 on:
   schedule:
-    - cron: "*/15 * * * *"  # Runs every 15 minutes
+    - cron: "*/10 * * * *"  # Runs every 10 minutes
   workflow_dispatch:  # Allows manual trigger
 
 jobs:
@@ -23,7 +23,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.m2
-          key: maven-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
+          key: maven-${{ runner.os }}-${{ hashFiles('**/Testt/pom.xml') }}
           restore-keys: maven-${{ runner.os }}
 
       - name: Install Chrome
@@ -34,4 +34,5 @@ jobs:
 
       - name: Run Selenium Tests with WebDriverManager 5.8.0
         run: |
+          cd Testt  # Navigate to the correct directory
           mvn clean test -Dwebdriver.chrome.driver=WebDriverManager
