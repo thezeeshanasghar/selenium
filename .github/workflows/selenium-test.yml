@@ -1,43 +1,46 @@
-name: Run Selenium Tests Every Hour
+name: Selenium Tests
 
 on:
   schedule:
-    - cron: '0 * * * *'  # Runs every hour
-  workflow_dispatch:  # Allows manual triggering
+    - cron: "*/15 * * * *"  # Runs every 15 minutes
+  workflow_dispatch:  # Allows manual trigger
 
 jobs:
-  selenium-test:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Set up Java
+      - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Set up Chrome for Selenium
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
-
-      - name: Set up ChromeDriver
-        uses: nanasess/setup-chromedriver@v2
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
         with:
-          chromedriver-version: 'latest'
+          path: ~/.m2
+          key: maven-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
+          restore-keys: maven-${{ runner.os }}
 
-      - name: Run Selenium Test
-        run: mvn test
-        env:
-          BROWSER: chrome  # Flag for browser type
+      - name: Install Chrome
+        run: |
+          sudo apt update
+          sudo apt install -y google-chrome-stable
+          google-chrome --version
 
-      - name: Check Test Results
-        if: ${{ success() }}
-        run: echo "YES"
+      - name: Install ChromeDriver (matching Chrome version)
+        run: |
+          CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+' | head -1)
+          CHROMEDRIVER_URL="https://chromedriver.storage.googleapis.com/$CHROME_VERSION/chromedriver_linux64.zip"
+          wget -q "$CHROMEDRIVER_URL" -O /tmp/chromedriver.zip || echo "Failed to fetch matching ChromeDriver"
+          unzip /tmp/chromedriver.zip -d /usr/local/bin/ || echo "Unzip failed"
+          chmod +x /usr/local/bin/chromedriver
+          chromedriver --version
 
-      - name: Test Failed
-        if: ${{ failure() }}
-        run: echo "NO"
+      - name: Run Selenium Tests
+        run: |
+          mvn clean test
