@@ -1,0 +1,43 @@
+name: Run Selenium Tests Every Hour
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # Runs every hour
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  selenium-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Chrome for Selenium
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+
+      - name: Set up ChromeDriver
+        uses: nanasess/setup-chromedriver@v2
+        with:
+          chromedriver-version: 'latest'
+
+      - name: Run Selenium Test
+        run: mvn test
+        env:
+          BROWSER: chrome  # Flag for browser type
+
+      - name: Check Test Results
+        if: ${{ success() }}
+        run: echo "YES"
+
+      - name: Test Failed
+        if: ${{ failure() }}
+        run: echo "NO"
