@@ -34,5 +34,5 @@ jobs:
 
       - name: Run Selenium Tests with WebDriverManager 5.8.0
         run: |
-          cd Testt  # Navigate to the correct directory
+          cd selenium/Testt  # Navigate to the correct directory
           mvn clean test -Dwebdriver.chrome.driver=WebDriverManager
