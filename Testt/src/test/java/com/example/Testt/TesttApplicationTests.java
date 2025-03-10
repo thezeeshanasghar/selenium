@@ -24,14 +24,14 @@ class TesttApplicationTests {
         try {
             driver.manage().window().maximize();
             driver.get("https://doctor.vaccinationcentre.com/login");
-            System.out.println("✅ Website opened.");
+            System.out.println("Website opened.");
 
             // Navigate to Signup Page
             WebElement signupLink = wait.until(ExpectedConditions.elementToBeClickable(
                 By.xpath("//a[@routerlink='/signup']")
             ));
             signupLink.click();
-            System.out.println("✅ Navigated to Signup page.");
+            System.out.println("Navigated to Signup page.");
             Thread.sleep(1000); // Wait for animations
 
             // Fill out form fields
@@ -65,10 +65,10 @@ class TesttApplicationTests {
                 ((JavascriptExecutor) driver).executeScript("arguments[0].click();", signUpButton);
             }
 
-            System.out.println("✅ Clicked on Sign Up button successfully.");
+            System.out.println("Clicked on Sign Up button successfully.");
             Thread.sleep(5000); // Allow time for signup processing
             driver.get("https://doctor.vaccinationcentre.com/login");
-            System.out.println("✅ Moved to Login page.");
+            System.out.println("Moved to Login page.");
 
             // Login
             fillInputField(driver, wait, "MobileNumber", "3335196658");
@@ -78,15 +78,15 @@ class TesttApplicationTests {
                 By.xpath("//ion-button[contains(text(), 'Login')]")
             ));
             loginButton.click();
-            System.out.println("✅ Clicked on Login button.");
+            System.out.println("Clicked on Login button.");
 
             wait.until(ExpectedConditions.urlContains("dashboard"));
-            assertTrue(driver.getCurrentUrl().contains("dashboard"), "❌ Login failed!");
+            assertTrue(driver.getCurrentUrl().contains("dashboard"), "Login failed!");
 
-            System.out.println("✅ Login successful!");
+            System.out.println("Login successful!");
 
         } catch (Exception e) {
-            System.out.println("❌ Test failed: " + e.getMessage());
+            System.out.println("Test failed: " + e.getMessage());
             fail("Test failed due to exception: " + e.getMessage());
         } finally {
             //driver.quit();
@@ -110,16 +110,16 @@ class TesttApplicationTests {
             if (inputField.isDisplayed() && inputField.isEnabled()) {
                 inputField.clear();
                 inputField.sendKeys(value);
-                System.out.println("✅ Filled " + fieldName + " with: " + value);
+                System.out.println("Filled " + fieldName + " with: " + value);
             } else {
                 // Use JavaScript if the element is not interactable
                 JavascriptExecutor js = (JavascriptExecutor) driver;
                 js.executeScript("arguments[0].removeAttribute('readonly');", inputField);
                 js.executeScript("arguments[0].value='" + value + "';", inputField);
-                System.out.println("✅ Filled " + fieldName + " with: " + value);
+                System.out.println("Filled " + fieldName + " with: " + value);
             }
         } catch (Exception e) {
-            System.out.println("❌ Failed to fill " + fieldName + ": " + e.getMessage());
+            System.out.println("Failed to fill " + fieldName + ": " + e.getMessage());
         }
     }
 }
