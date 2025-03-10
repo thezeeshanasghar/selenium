@@ -32,15 +32,6 @@ jobs:
           sudo apt install -y google-chrome-stable
           google-chrome --version
 
-      - name: Install ChromeDriver (matching Chrome version)
+      - name: Run Selenium Tests with WebDriverManager 5.8.0
         run: |
-          CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+' | head -1)
-          CHROMEDRIVER_URL="https://chromedriver.storage.googleapis.com/$CHROME_VERSION/chromedriver_linux64.zip"
-          wget -q "$CHROMEDRIVER_URL" -O /tmp/chromedriver.zip || echo "Failed to fetch matching ChromeDriver"
-          unzip /tmp/chromedriver.zip -d /usr/local/bin/ || echo "Unzip failed"
-          chmod +x /usr/local/bin/chromedriver
-          chromedriver --version
-
-      - name: Run Selenium Tests
-        run: |
-          mvn clean test
+          mvn clean test -Dwebdriver.chrome.driver=WebDriverManager
