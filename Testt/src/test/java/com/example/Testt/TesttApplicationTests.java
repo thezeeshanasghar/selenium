@@ -6,10 +6,10 @@ import java.time.Duration;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 @SpringBootTest
@@ -18,7 +18,16 @@ class TesttApplicationTests {
     @Test
     void testSignupAndLogin() {
         WebDriverManager.chromedriver().setup();
-        WebDriver driver = new ChromeDriver();
+
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless=new");
+        options.addArguments("--disable-gpu");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--remote-debugging-port=9222");
+        options.addArguments("--user-data-dir=/tmp/selenium-profile-" + System.currentTimeMillis());
+
+        WebDriver driver = new ChromeDriver(options);
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
         try {
@@ -45,7 +54,6 @@ class TesttApplicationTests {
             fillInputField(driver, wait, "PhoneNo", "0876543211");
 
             // Enable & Click Sign Up Button
-         // Wait for the button to be visible & enabled
             WebElement signUpButton = wait.until(ExpectedConditions.presenceOfElementLocated(
                 By.xpath("//ion-button[contains(text(), 'Sign Up')]")
             ));
@@ -89,7 +97,7 @@ class TesttApplicationTests {
             System.out.println("Test failed: " + e.getMessage());
             fail("Test failed due to exception: " + e.getMessage());
         } finally {
-            //driver.quit();
+            driver.quit();
         }
     }
 
