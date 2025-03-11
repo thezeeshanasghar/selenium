@@ -36,6 +36,7 @@ jobs:
 
       - name: Verify POM.xml Exists
         run: |
+          cd selenium/Testt  # ✅ Change directory to where pom.xml exists
           if [ ! -f pom.xml ]; then
             echo "Error: pom.xml not found in $(pwd)."
             exit 1
@@ -43,12 +44,12 @@ jobs:
 
       - name: Run Selenium Tests in Headless Mode
         run: |
-          cd selenium/Testt # ✅ Replace with the correct directory containing pom.xml
+          cd selenium/Testt  # ✅ Run tests inside the correct directory
           mvn clean test -Dwebdriver.chrome.args="--headless --disable-gpu --no-sandbox --disable-dev-shm-usage"
 
       - name: Upload Test Reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4  # ✅ Updated to v4
         with:
           name: Test Reports
-          path: target/surefire-reports/
+          path: selenium/Testt/target/surefire-reports/
