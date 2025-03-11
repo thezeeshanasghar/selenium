@@ -48,4 +48,5 @@ jobs:
       - name: Run Selenium Tests with WebDriverManager 5.8.0
         run: |
           cd $POM_DIR  # Navigate to the detected directory
-          mvn clean test -Dwebdriver.chrome.driver=WebDriverManager
+          mvn clean test -Dwebdriver.chrome.driver=WebDriverManager \
+            -Dwebdriver.chrome.args="--user-data-dir=/tmp/chrome-profile"
