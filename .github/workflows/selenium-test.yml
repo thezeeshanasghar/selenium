@@ -4,27 +4,44 @@ on:
   push:
     branches:
       - main
+  pull_request:
+  schedule:
+    - cron: "*/10 * * * *"  # Runs every 10 minutes
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      - name: Set Up Java
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Set up Maven
+      - name: Cache Maven Dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: maven-
+
+      - name: Install Chrome & WebDriver
         run: |
-          sudo apt-get update
-          sudo apt-get install -y maven
+          sudo apt update
+          sudo apt install -y google-chrome-stable
 
       - name: Run Selenium Tests in Headless Mode
         run: |
-          mvn clean test -Dwebdriver.chrome.driver=WebDriverManager \
-            -Dwebdriver.chrome.args="--headless --disable-gpu --no-sandbox --disable-dev-shm-usage --remote-debugging-port=9222 --user-data-dir=/tmp/selenium-profile-$(uuidgen)"
+          mvn clean test -Dtest="*Test" \
+            -Dwebdriver.chrome.args="--headless --disable-gpu --no-sandbox --disable-dev-shm-usage"
+
+      - name: Upload Test Reports
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: Test Reports
+          path: target/surefire-reports/
