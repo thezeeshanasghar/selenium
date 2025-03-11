@@ -34,14 +34,21 @@ jobs:
           sudo apt update
           sudo apt install -y google-chrome-stable
 
+      - name: Verify POM.xml Exists
+        run: |
+          if [ ! -f pom.xml ]; then
+            echo "Error: pom.xml not found in $(pwd)."
+            exit 1
+          fi
+
       - name: Run Selenium Tests in Headless Mode
         run: |
-          mvn clean test -Dtest="*Test" \
-            -Dwebdriver.chrome.args="--headless --disable-gpu --no-sandbox --disable-dev-shm-usage"
+          cd selenium/Testt  # ✅ Replace with the correct directory containing pom.xml
+          mvn clean test -Dwebdriver.chrome.args="--headless --disable-gpu --no-sandbox --disable-dev-shm-usage"
 
       - name: Upload Test Reports
         if: always()
-        uses: actions/upload-artifact@v4  # Updated to v4
+        uses: actions/upload-artifact@v4
         with:
           name: Test Reports
           path: target/surefire-reports/
