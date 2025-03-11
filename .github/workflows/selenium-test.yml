@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Ensures all branches and folders are fetched
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -32,7 +34,18 @@ jobs:
           sudo apt install -y google-chrome-stable
           google-chrome --version
 
+      - name: Verify directory structure
+        run: |
+          echo "Checking directory structure..."
+          ls -R  # List all files to debug missing directories
+
       - name: Run Selenium Tests with WebDriverManager 5.8.0
         run: |
-          cd selenium/Testt  # Navigate to the correct directory
-          mvn clean test -Dwebdriver.chrome.driver=WebDriverManager
+          if [ -d "selenium/Testt" ]; then
+            cd selenium/Testt  # Navigate to the correct directory
+            ls -l  # List files in Testt directory
+            mvn clean test -Dwebdriver.chrome.driver=WebDriverManager
+          else
+            echo "Directory selenium/Testt does not exist!"
+            exit 1
+          fi
