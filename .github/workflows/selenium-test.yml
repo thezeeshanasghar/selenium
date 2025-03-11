@@ -45,9 +45,7 @@ jobs:
           echo "Found pom.xml at: $POM_PATH"
           echo "POM_DIR=$(dirname "$POM_PATH")" >> $GITHUB_ENV
 
-      - name: Run Selenium Tests with WebDriverManager 5.8.0
+      - name: Run Selenium Tests in Headless Mode
         run: |
-          cd $POM_DIR  # Navigate to the detected directory
-          pkill -f chrome || true  # Ensure Chrome is fully closed before running tests
           mvn clean test -Dwebdriver.chrome.driver=WebDriverManager \
-          -Dwebdriver.chrome.args="--no-sandbox --disable-dev-shm-usage --user-data-dir=/tmp/chrome-profile-$(date +%s)"
+            -Dwebdriver.chrome.args="--headless --disable-gpu --user-data-dir=/tmp/selenium-profile-$(date +%s)"
