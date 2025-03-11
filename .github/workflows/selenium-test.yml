@@ -36,7 +36,7 @@ jobs:
 
       - name: Verify POM.xml Exists
         run: |
-          cd selenium/Testt  # ✅ Change directory to where pom.xml exists
+          cd Testt  # ✅ Change directory to where pom.xml exists
           if [ ! -f pom.xml ]; then
             echo "Error: pom.xml not found in $(pwd)."
             exit 1
