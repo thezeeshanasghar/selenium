@@ -43,7 +43,7 @@ jobs:
 
       - name: Run Selenium Tests in Headless Mode
         run: |
-          cd selenium/Testt  # ✅ Replace with the correct directory containing pom.xml
+          cd selenium/Testt # ✅ Replace with the correct directory containing pom.xml
           mvn clean test -Dwebdriver.chrome.args="--headless --disable-gpu --no-sandbox --disable-dev-shm-usage"
 
       - name: Upload Test Reports
