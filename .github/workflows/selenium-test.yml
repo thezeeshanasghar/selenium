@@ -44,7 +44,7 @@ jobs:
 
       - name: Run Selenium Tests in Headless Mode
         run: |
-          cd selenium/Testt  # ✅ Run tests inside the correct directory
+          cd Testt  # ✅ Run tests inside the correct directory
           mvn clean test -Dwebdriver.chrome.args="--headless --disable-gpu --no-sandbox --disable-dev-shm-usage"
 
       - name: Upload Test Reports
