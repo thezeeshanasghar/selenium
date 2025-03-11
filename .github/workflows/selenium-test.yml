@@ -1,9 +1,9 @@
-name: Selenium Tests
+name: Run Selenium Tests
 
 on:
-  schedule:
-    - cron: "*/10 * * * *"  # Runs every 10 minutes
-  workflow_dispatch:  # Allows manual trigger
+  push:
+    branches:
+      - main
 
 jobs:
   test:
@@ -12,8 +12,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Ensures all files and branches are fetched
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -21,31 +19,12 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Cache Maven dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2
-          key: maven-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
-          restore-keys: maven-${{ runner.os }}
-
-      - name: Install Chrome
+      - name: Set up Maven
         run: |
-          sudo apt update
-          sudo apt install -y google-chrome-stable
-          google-chrome --version
-
-      - name: Locate pom.xml
-        id: find-pom
-        run: |
-          POM_PATH=$(find . -name "pom.xml" | head -n 1)
-          if [ -z "$POM_PATH" ]; then
-            echo "Error: pom.xml not found!"
-            exit 1
-          fi
-          echo "Found pom.xml at: $POM_PATH"
-          echo "POM_DIR=$(dirname "$POM_PATH")" >> $GITHUB_ENV
+          sudo apt-get update
+          sudo apt-get install -y maven
 
       - name: Run Selenium Tests in Headless Mode
         run: |
           mvn clean test -Dwebdriver.chrome.driver=WebDriverManager \
-            -Dwebdriver.chrome.args="--headless --disable-gpu --user-data-dir=/tmp/selenium-profile-$(date +%s)"
+            -Dwebdriver.chrome.args="--headless --disable-gpu --no-sandbox --disable-dev-shm-usage --remote-debugging-port=9222 --user-data-dir=/tmp/selenium-profile-$(uuidgen)"
