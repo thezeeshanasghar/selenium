@@ -1,5 +1,4 @@
 package com.example.Testt;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import java.time.Duration;
@@ -18,7 +17,6 @@ class TesttApplicationTests {
     @Test
     void testSignupAndLogin() {
         WebDriverManager.chromedriver().setup();
-
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless=new");
         options.addArguments("--disable-gpu");
@@ -26,7 +24,6 @@ class TesttApplicationTests {
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--remote-debugging-port=9222");
         options.addArguments("--user-data-dir=/tmp/selenium-profile-" + System.currentTimeMillis());
-
         WebDriver driver = new ChromeDriver(options);
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
