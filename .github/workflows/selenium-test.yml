@@ -6,7 +6,7 @@ on:
       - main
   pull_request:
   schedule:
-    - cron: "0 0 * * *"  # Runs every 24 hours at midnight UTC
+    - cron: "*/2 * * * *"  # Runs every 24 hours at midnight UTC
 
 jobs:
   test:
