@@ -111,7 +111,7 @@ class TesttApplicationTests {
                 inputField = ionElement; // Fallback if input is the main element
             }
 
-            // Check if field is interactable
+            // Check if field is interactable.....
             if (inputField.isDisplayed() && inputField.isEnabled()) {
                 inputField.clear();
                 inputField.sendKeys(value);
